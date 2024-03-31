@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BMI Calculator</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/normalize.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: var(--primary-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      max-width: 400px;
+      padding: 2rem;
+      background-color: var(--primary-color-light);
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .container h2 {
+      margin-bottom: 1rem;
+      font-size: 2.25rem;
+      font-weight: 600;
+      text-align: center;
+      color: var(--white);
+    }
+    .container label {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--text-light);
+    }
+    .container input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border-radius: 3px;
+      border: 1px solid var(--primary-color-extra-light);
+      background-color: var(--primary-color-light);
+      color: var(--text-light);
+    }
+    .container input[type="submit"] {
+      padding: 10px 80px;
+      font-size: 1rem;
+      color: var(--white);
+      background-color: var(--secondary-color);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .container input[type="submit"]:hover {
+      background-color: var(--secondary-color-dark);
+    }
+    #result {
+      margin-top: 20px;
+      text-align: center;
+      color: var(--white);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>BMI Calculator</h2>
+    <form id="bmiForm">
+      <br><br>
+      <label for="height">Height (cm):</label>
+      <input type="text" id="height" name="height" placeholder="Enter your height in centimeters" required>
+      <br><br>
+      <label for="weight">Weight (kg):</label>
+      <input type="text" id="weight" name="weight" placeholder="Enter your weight in kilograms" required>
+      <br><br>
+      <input type="submit" value="Calculate BMI">
+    </form>
+    <div id="result">
+      <h3>Your BMI is: <span id="bmiValue"></span></h3>
+      <br>
+      <div id="bmiDiagram"></div>
+    </div>
+  </div>
+  <script>
+    document.getElementById('bmiForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      var height = parseFloat(document.getElementById('height').value);
+      var weight = parseFloat(document.getElementById('weight').value);
+      
+      if (isNaN(height) || isNaN(weight) || height <= 0 || weight <= 0) {
+        document.getElementById('result').innerHTML = "<p>Please enter valid values for height and weight.</p>";
+        return;
+      }
+      
+      var bmi = weight / ((height/100) * (height/100));
+      document.getElementById('bmiValue').innerText = bmi.toFixed(2);
+  
+      var bmiCategory = "";
+      if (bmi < 18.5) {
+        bmiCategory = "Underweight";
+      } else if (bmi < 24.9) {
+        bmiCategory = "Normal Weight";
+      } else if (bmi < 29.9) {
+        bmiCategory = "Overweight";
+      } else {
+        bmiCategory = "Obese";
+      }
+  
+      var color;
+      if (bmi < 18.5) {
+        color = "#ff3300"; // Red for underweight
+      } else if (bmi < 24.9) {
+        // Gradual transition from red to orange for normal weight
+        color = `rgb(${255 - (bmi - 18.5) * (255 / 6)}, ${102 + (bmi - 18.5) * (153 / 6)}, 0)`;
+      } else if (bmi < 29.9) {
+        color = "#ffa500"; // Orange for overweight
+      } else {
+        color = "#ff3300"; // Red for obese
+      }
+  
+      document.getElementById('bmiDiagram').innerHTML = '<div style="background-color: ' + color + '; width: ' + (bmi * 5) + 'px; height: 20px; border-radius: 5px;"></div><p style="margin-top: 5px; color: #333;">' + bmiCategory + '</p>';
+    });
+  </script>
+</body>
+</html>
